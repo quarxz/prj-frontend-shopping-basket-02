@@ -1,0 +1,27 @@
+.main-nav ul {
+  display: flex;
+  list-style-type: none;
+  gap: 20px;
+}
+.main-nav ul li {
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.main-nav ul li::before {
+  display: block;
+  content: attr(title);
+  font-weight: bold;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.main-nav ul li:hover,
+.main-nav ul li:active {
+  font-weight: bold;
+}
+
+.nav-active {
+  color: red;
+}
