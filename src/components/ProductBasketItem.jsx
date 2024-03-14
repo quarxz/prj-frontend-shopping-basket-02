@@ -13,6 +13,42 @@ export function ProductBasketItem({ product }) {
   const [isError, setIsError] = useState(false);
   const [products, setProducts] = useState([]);
 
+  const [quantity, setQuantity] = useState(1);
+
+  async function handleDeleteBasketItem(e) {
+    console.log("delete");
+    console.log(product);
+    console.log(products);
+    console.log(user.id);
+
+    // const productId = e.target.value;
+    try {
+      setIsLoading(true);
+      console.log(quantity);
+      const response = await axios.post(
+        `${url}/user/${user.id}/delete`,
+        {
+          productId: e.target.value,
+          quantity: Number(quantity),
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response.data);
+      console.log(response.status);
+      console.log(response.data.message);
+    } catch (err) {
+      setIsError(true);
+      console.log(err);
+      console.log(err.response.data.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   useEffect(() => {
     async function loadProducts() {
       console.log("Load Data");
@@ -35,7 +71,7 @@ export function ProductBasketItem({ product }) {
       }
     }
     loadProducts();
-  }, [location]);
+  }, []);
 
   if (isError) {
     return (
@@ -46,33 +82,9 @@ export function ProductBasketItem({ product }) {
     );
   }
 
-  async function handleDeleteBasketItem(e) {
-    console.log("delete");
-    console.log(product);
-    console.log(products);
-    console.log(user.id);
-
-    // const productId = e.target.value;
-    try {
-      const response = await axios.post(
-        `${url}/user/${user.id}/delete`,
-        {
-          productId: e.target.value,
-          quantity: 5,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response.data);
-      console.log(response.status);
-      console.log(response.data.message);
-    } catch (err) {
-      console.log(err);
-      console.log(err.response.data.message);
-    }
+  function count() {
+    setQuantity((prevQuant) => prevQuant + 1);
+    console.log(quantity);
   }
 
   return (
@@ -84,7 +96,25 @@ export function ProductBasketItem({ product }) {
         <li>price: {products.price}</li>
       </ul>
       <button type="text" value={products.id} onClick={handleDeleteBasketItem}>
-        delete
+        {quantity != product.quantity ? "update" : "delete"}
+      </button>
+
+      <button
+        type="text"
+        onClick={() => {
+          quantity > 1 && setQuantity((prevQuant) => prevQuant - 1);
+        }}
+      >
+        -
+      </button>
+      <input type="number" name="quantity" value={quantity} onChange={(e) => e.target.value} />
+      <button
+        type="text"
+        onClick={() => {
+          quantity < product.quantity && setQuantity((prevQuant) => prevQuant + 1);
+        }}
+      >
+        +
       </button>
     </section>
   );

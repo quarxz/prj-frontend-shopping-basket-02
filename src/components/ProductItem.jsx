@@ -3,7 +3,6 @@ import styles from "./ProductItem.module.css";
 import { Link } from "react-router-dom";
 
 export function ProductItem({ products }) {
-  console.log(products.category);
   return (
     // <section className={styles[product.category.toLowerCase().replace(/ & /g, "")]}>
 

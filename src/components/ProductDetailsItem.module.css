@@ -1,0 +1,14 @@
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ul {
+  list-style-type: none;
+}
+
+button {
+  width: 50%;
+  margin: 1em 0;
+}

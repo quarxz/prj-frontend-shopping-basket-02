@@ -36,6 +36,7 @@ export function Basket() {
     }
     loadProducts();
   }, [location]);
+
   return (
     <>
       <h2>The Shopping Basket!</h2>
@@ -45,8 +46,8 @@ export function Basket() {
       ) : isloading ? (
         <span className="loader"></span>
       ) : (
-        products.map((product) => {
-          return <ProductBasketItem key={product.productId} product={product} />;
+        products.map((product, index) => {
+          return <ProductBasketItem key={index} product={product} />;
         })
       )}
     </>
