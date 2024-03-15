@@ -28,7 +28,7 @@ export function Login() {
         <input
           type="text"
           value={localUserName}
-          onChange={(event) => setLocalUserName("falk@test.com")}
+          onChange={(event) => setLocalUserName(event.target.value)}
         />
         <button>Submit</button>
       </form>

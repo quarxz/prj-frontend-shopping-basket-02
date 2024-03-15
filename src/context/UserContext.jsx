@@ -17,8 +17,8 @@ export function UserProvider({ children }) {
     try {
       setIsLoading(true);
 
-      const url = "https://prj-backend-shopping-basket.onrender.com";
-      // const url = "http://localhost:3000";
+      // const url = "https://prj-backend-shopping-basket.onrender.com";
+      const url = "http://localhost:3000";
 
       const response = await axios.post(`${url}/user/${userName}`);
       console.log(response.data);
