@@ -22,11 +22,11 @@ export function RootLayout() {
               Products
             </NavLink>
           </li>
-          {/* <li title="Contact">
-            <NavLink className={getNavClass} to="/contact">
-              Contact
+          <li title="Contact">
+            <NavLink className={getNavClass} to="/landingpage">
+              Landingpage
             </NavLink>
-          </li> */}
+          </li>
           <li title="Basket">
             <NavLink className={getNavClass} to="/basket">
               Shopping-Basket

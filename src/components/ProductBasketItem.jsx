@@ -5,7 +5,7 @@ import { UserContext } from "../context/UserContext";
 
 import axios from "axios";
 
-export function ProductBasketItem({ product }) {
+export function ProductBasketItem({ product, onGetPrice }) {
   const location = useLocation();
 
   const { url, user } = useContext(UserContext);
@@ -14,6 +14,15 @@ export function ProductBasketItem({ product }) {
   const [products, setProducts] = useState([]);
 
   const [quantity, setQuantity] = useState(1);
+
+  const [serverInfo, setServerInfo] = useState("");
+
+  async function setServerInfoFn(data) {
+    setServerInfo((prevServerInfo) => (prevServerInfo = data));
+    setTimeout(() => {
+      setServerInfo("");
+    }, 5000);
+  }
 
   async function handleDeleteBasketItem(e) {
     console.log("delete");
@@ -25,7 +34,7 @@ export function ProductBasketItem({ product }) {
     try {
       setIsLoading(true);
       console.log(quantity);
-      const response = await axios.post(
+      const { data } = await axios.post(
         `${url}/user/${user.id}/delete`,
         {
           productId: e.target.value,
@@ -37,9 +46,11 @@ export function ProductBasketItem({ product }) {
           },
         }
       );
-      console.log(response.data);
-      console.log(response.status);
-      console.log(response.data.message);
+      console.log(data);
+      console.log(data.status);
+      console.log(data.data.message);
+
+      setServerInfoFn(data.message);
     } catch (err) {
       setIsError(true);
       console.log(err);
@@ -57,7 +68,7 @@ export function ProductBasketItem({ product }) {
         setIsLoading(true);
         if (url) {
           const response = await axios.get(`${url}/product/${product.productId}`);
-          // console.log(response.data);
+          console.log(response.data);
           // console.log(response.status);
           setProducts(response.data);
         } else {
@@ -82,22 +93,16 @@ export function ProductBasketItem({ product }) {
     );
   }
 
-  function count() {
-    setQuantity((prevQuant) => prevQuant + 1);
-    console.log(quantity);
-  }
-
   return (
     <section className={styles.basketItem}>
       <h3>{products.title}</h3>
       <ul>
         <li>productId: {products.id}</li>
-        <li>quantity: {product.quantity}</li>
-        <li>price: {products.price}</li>
+        <li>quantity: {product.quantity} Stück</li>
+        <li>price: {products.price} €</li>
+        <li>gesamtpreis: {products.price * product.quantity} €</li>
       </ul>
-      <button type="text" value={products.id} onClick={handleDeleteBasketItem}>
-        {quantity != product.quantity ? "update" : "delete"}
-      </button>
+      {onGetPrice(products.price, product.quantity)}
 
       <button
         type="text"
@@ -108,6 +113,7 @@ export function ProductBasketItem({ product }) {
         -
       </button>
       <input type="number" name="quantity" value={quantity} onChange={(e) => e.target.value} />
+
       <button
         type="text"
         onClick={() => {
@@ -116,6 +122,10 @@ export function ProductBasketItem({ product }) {
       >
         +
       </button>
+      <button type="text" value={products.id} onClick={handleDeleteBasketItem}>
+        {quantity != product.quantity ? `delete (${quantity})` : "delete complete"}
+      </button>
+      {serverInfo ? <p>{serverInfo}</p> : undefined}
     </section>
   );
 }

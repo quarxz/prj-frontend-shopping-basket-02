@@ -14,6 +14,11 @@ export function Basket() {
   const [isError, setIsError] = useState(false);
   const [products, setProducts] = useState([]);
 
+  const [price, setPrice] = useState(0);
+
+  let arr = [];
+  let x = 0;
+
   useEffect(() => {
     async function loadProducts() {
       console.log("Load Data");
@@ -37,19 +42,38 @@ export function Basket() {
     loadProducts();
   }, [location]);
 
+  async function onSetPrice(price, quantity) {
+    const productgesamtpreis = price * quantity;
+    arr.push(productgesamtpreis);
+    let sum = arr.reduce((acc, curr) => {
+      return acc + curr;
+    }, 0);
+    productgesamtpreis !== undefined && setPrice(sum);
+  }
+
   return (
     <>
       <h2>The Shopping Basket!</h2>
-
       {products.length === 0 ? (
         <p>Keine Producte im Warenkorb</p>
       ) : isloading ? (
         <span className="loader"></span>
       ) : (
-        products.map((product, index) => {
-          return <ProductBasketItem key={index} product={product} />;
+        products.map((product) => {
+          return (
+            <ProductBasketItem
+              key={product.productId}
+              product={product}
+              onGetPrice={(price, quantity) => {
+                if (price !== undefined) {
+                  onSetPrice(price, quantity);
+                }
+              }}
+            />
+          );
         })
       )}
+      <p>Warenkorb Gesamtpreis: {price} €</p>
     </>
   );
 }
