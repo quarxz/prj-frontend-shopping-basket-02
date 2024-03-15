@@ -1,0 +1,10 @@
+.activ span {
+  color: green;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.inactiv span {
+  color: red;
+  font-weight: bold;
+  font-size: 1.2em;
+}

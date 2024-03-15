@@ -15,9 +15,9 @@ export function Login() {
       <h2>Login</h2>
       <h3>Context Value</h3>
 
-      <p>{tofu}</p>
+      {/* <p>{tofu}</p> */}
 
-      {user ? <p>{user.userName}</p> : <p>Not logged in</p>}
+      {user ? <p>{user.email}</p> : <p>Not logged in</p>}
 
       <form
         onSubmit={(event) => {
@@ -29,6 +29,7 @@ export function Login() {
           type="text"
           value={localUserName}
           onChange={(event) => setLocalUserName(event.target.value)}
+          // onChange={(event) => setLocalUserName("falk@test.com")}
         />
         <button>Submit</button>
       </form>

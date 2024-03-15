@@ -48,7 +48,12 @@ export function Basket() {
     let sum = arr.reduce((acc, curr) => {
       return acc + curr;
     }, 0);
-    productgesamtpreis !== undefined && setPrice(sum);
+    // productgesamtpreis !== undefined
+    //   ? user.promotion
+    //     ? setPrice(sum - (sum / 100) * 10)
+    //     : setPrice(sum)
+    //   : undefined;
+    productgesamtpreis !== undefined ? setPrice(sum) : undefined;
   }
 
   return (
@@ -73,7 +78,23 @@ export function Basket() {
           );
         })
       )}
-      <p>Warenkorb Gesamtpreis: {price} €</p>
+      {console.log(user.promotion)}
+      {user.promotion ? <p>Original Price: {price.toFixed(2)} €</p> : ""}
+      {user.promotion ? <p>Promotion Rabatt 10%: {((price / 100) * 10).toFixed(2)} €</p> : ""}
+      {user.promotion ? (
+        <p>Your Price with 10% Rabatt: {(price - (price / 100) * 10).toFixed(2)} €</p>
+      ) : (
+        ""
+      )}
+      {user.promotion ? (
+        <p>
+          <b>Warenkorb Gesamtpreis: {(price - (price / 100) * 10).toFixed(2)} €</b>
+        </p>
+      ) : (
+        <p>
+          <b>Warenkorb Gesamtpreis: {price} €</b>
+        </p>
+      )}
     </>
   );
 }

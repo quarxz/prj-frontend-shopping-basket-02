@@ -1,3 +1,5 @@
+import styles from "./Home.module.css";
+
 import { useContext, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
@@ -57,7 +59,20 @@ export function Home() {
       <h1>Welcome to Tak Soft!</h1>
       <h2>Shopping Basket Project</h2>
 
-      {user ? <p>Login: {user.userName}</p> : <p>Not logged in!</p>}
+      {user ? <p>Login: {user.email}</p> : <p>Not logged in!</p>}
+      {user ? (
+        user.promotion ? (
+          <p className={styles.activ}>
+            Promotion: <span>activ</span>
+          </p>
+        ) : (
+          <p className={styles.inactiv}>
+            Promotion: <span>inactiv</span>
+          </p>
+        )
+      ) : (
+        <p></p>
+      )}
 
       <h3>Top Products:</h3>
 
