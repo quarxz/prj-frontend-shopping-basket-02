@@ -9,7 +9,7 @@ export function ProductItem({ products }) {
     <>
       {products.map((product) => {
         return (
-          <section key={product.id}>
+          <section key={product.id} className={styles.productitem}>
             <h2>{product.title}</h2>
             <h4>{product.category}</h4>
             <p>{product.id}</p>

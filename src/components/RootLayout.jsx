@@ -22,19 +22,25 @@ export function RootLayout() {
               Products
             </NavLink>
           </li>
-          <li title="Contact">
-            <NavLink className={getNavClass} to="/landingpage">
-              Landingpage
-            </NavLink>
-          </li>
-          <li title="Basket">
-            <NavLink className={getNavClass} to="/basket">
-              Shopping-Basket
-            </NavLink>
-          </li>
+          {user ? (
+            <li title="Contact">
+              <NavLink className={getNavClass} to="/landingpage">
+                Landingpage
+              </NavLink>
+            </li>
+          ) : undefined}
+
+          {user ? (
+            <li title="Basket">
+              <NavLink className={getNavClass} to="/basket">
+                Shopping-Basket
+              </NavLink>
+            </li>
+          ) : undefined}
+
           <li title="Basket">
             {user ? (
-              <NavLink className={getNavClass} to="/" onClick={logout}>
+              <NavLink className={getNavClass} to="/login" onClick={logout}>
                 Logout
               </NavLink>
             ) : (

@@ -7,8 +7,15 @@ import axios from "axios";
 
 export function ProductDetailItem({ product }) {
   const [quantity, setQuantity] = useState(1);
-
+  const [serverInfo, setServerInfo] = useState("");
   const { user, url } = useContext(UserContext);
+
+  async function setServerInfoFn(data) {
+    setServerInfo((prevServerInfo) => (prevServerInfo = data));
+    setTimeout(() => {
+      setServerInfo("");
+    }, 3000);
+  }
 
   async function handleAddProductToBasket(e) {
     console.log(Number(quantity));
@@ -27,10 +34,12 @@ export function ProductDetailItem({ product }) {
       );
       console.log(response.data);
       console.log(response.status);
-      console.log(response.message);
+      console.log(response.data.message);
+      setServerInfoFn(response.data.message);
     } catch (err) {
       console.log(err);
       console.log(err.response.data.message);
+      setServerInfoFn(err.response.data.message);
     }
   }
   return (
@@ -66,6 +75,7 @@ export function ProductDetailItem({ product }) {
       <button value={product.id} type="text" onClick={handleAddProductToBasket}>
         Add to Shopping-Basket
       </button>
+      {serverInfo ? <p className={styles["server-info"]}>{serverInfo}</p> : <p></p>}
     </section>
   );
 }

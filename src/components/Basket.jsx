@@ -15,10 +15,20 @@ export function Basket() {
   const [isError, setIsError] = useState(false);
 
   const [productsFromUser, setProductsFromUser] = useState([]);
+  console.log(productsFromUser);
 
+  const [arrPrice, setArrPrice] = useState([]);
   const [price, setPrice] = useState(0);
 
-  let arr = [];
+  let arr = Array();
+
+  async function onSetPrice() {
+    let sum = arr.reduce((acc, curr) => {
+      return acc + curr;
+    }, 0);
+    setPrice(sum);
+    console.log(price);
+  }
 
   const loadProducts = useCallback(async () => {
     console.log("Load Data");
@@ -33,6 +43,15 @@ export function Basket() {
         setProductsFromUser(products);
 
         response.data.products?.length && setPrice(0);
+
+        response.data.products.map((product) => {
+          const price = product.product.price;
+          const quantity = product.quantity;
+          const productgesamtpreis = price * quantity;
+          arr.push(productgesamtpreis);
+        });
+        onSetPrice();
+
         console.log("Hello from Load Products in Basket!");
       } else {
         setProductsFromUser([]);
@@ -60,9 +79,9 @@ export function Basket() {
         productsFromUser.map((productDataFromUser) => {
           return (
             <ProductBasketItem
-              key={productDataFromUser.productId._id}
+              key={productDataFromUser.product._id}
               product={{
-                ...productDataFromUser.productId,
+                ...productDataFromUser.product,
                 quantity: productDataFromUser.quantity,
               }}
               // getPrice={(price, quantity) => {
@@ -73,6 +92,7 @@ export function Basket() {
               onUpdateItem={() => {
                 loadProducts();
               }}
+
               // getUpdatedProductFormUser={() => {
               //   console.log("Update Product Data after delete");
               //   setTest((prevt) => (prevt += 1));
@@ -81,6 +101,7 @@ export function Basket() {
           );
         })
       )}
+      {}
       {user && productsFromUser.length !== 0 ? (
         user.promotion ? (
           <p>Original Price: {price.toFixed(2)} €</p>
@@ -97,10 +118,7 @@ export function Basket() {
       ) : undefined}
       {user && productsFromUser.length !== 0 ? (
         user.promotion ? (
-          <p>
-            Your Price with 10% Rabatt:{" "}
-            {(price - (price / 100) * 10).toFixed(2)} €
-          </p>
+          <p>Your Price with 10% Rabatt: {(price - (price / 100) * 10).toFixed(2)} €</p>
         ) : (
           ""
         )
@@ -108,9 +126,7 @@ export function Basket() {
       {user && productsFromUser.length !== 0 ? (
         user.promotion ? (
           <p>
-            <b>
-              Warenkorb Gesamtpreis: {(price - (price / 100) * 10).toFixed(2)} €
-            </b>
+            <b>Warenkorb Gesamtpreis: {(price - (price / 100) * 10).toFixed(2)} €</b>
           </p>
         ) : (
           <p>

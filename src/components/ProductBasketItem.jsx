@@ -63,8 +63,7 @@ export function ProductBasketItem({ product, onUpdateItem }) {
       <button
         type="text"
         onClick={() => {
-          quantityToDelete > 1 &&
-            setQuantityToDelete((prevQuant) => prevQuant - 1);
+          quantityToDelete > 1 && setQuantityToDelete((prevQuant) => prevQuant - 1);
         }}
       >
         -
@@ -79,8 +78,7 @@ export function ProductBasketItem({ product, onUpdateItem }) {
       <button
         type="text"
         onClick={() => {
-          quantityToDelete < product.quantity &&
-            setQuantityToDelete((prevQuant) => prevQuant + 1);
+          quantityToDelete < product.quantity && setQuantityToDelete((prevQuant) => prevQuant + 1);
         }}
       >
         +
@@ -93,11 +91,9 @@ export function ProductBasketItem({ product, onUpdateItem }) {
           onUpdateItem();
         }}
       >
-        {quantityToDelete != product.quantity
-          ? `delete (${quantityToDelete})`
-          : "delete complete"}
+        {quantityToDelete != product.quantity ? `delete (${quantityToDelete})` : "delete complete"}
       </button>
-      {JSON.stringify(product)}
+      {/* {JSON.stringify(product)} */}
     </section>
   );
 }
