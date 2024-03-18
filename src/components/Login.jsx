@@ -28,8 +28,8 @@ export function Login() {
         <input
           type="text"
           value={localUserName}
-          onChange={(event) => setLocalUserName(event.target.value)}
-          // onChange={(event) => setLocalUserName("falk@test.com")}
+          // onChange={(event) => setLocalUserName(event.target.value)}
+          onChange={(event) => setLocalUserName("falk@test.com")}
         />
         <button>Submit</button>
       </form>

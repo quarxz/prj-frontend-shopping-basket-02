@@ -12,12 +12,14 @@ export function Basket() {
   const { user, url } = useContext(UserContext);
   const [isloading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [products, setProducts] = useState([]);
+
+  const [productsFromUser, setProductsFromUser] = useState([]);
 
   const [price, setPrice] = useState(0);
 
+  const [test, setTest] = useState(0);
+
   let arr = [];
-  let x = 0;
 
   useEffect(() => {
     async function loadProducts() {
@@ -26,21 +28,26 @@ export function Basket() {
         setIsLoading(true);
         if (url) {
           const response = await axios.post(`${url}/user/${user.id}`);
+
           console.log(response.data.products);
           console.log(response.status);
-          setProducts(response.data.products);
+          let x = response.data.products;
+          setProductsFromUser((prevX) => (prevX = x));
+
+          response.data.products == "" && setPrice(0);
+          console.log("Hello from Load Products in Basket!");
         } else {
-          setProducts([]);
+          setProductsFromUser([]);
         }
       } catch (err) {
         setIsError(true);
-        console.log(err);
+        // console.log(err);
       } finally {
         setIsLoading(false);
       }
     }
     loadProducts();
-  }, [location]);
+  }, [location, test]);
 
   async function onSetPrice(price, quantity) {
     const productgesamtpreis = price * quantity;
@@ -59,42 +66,61 @@ export function Basket() {
   return (
     <>
       <h2>The Shopping Basket!</h2>
-      {products.length === 0 ? (
+      {productsFromUser.length === 0 ? (
         <p>Keine Producte im Warenkorb</p>
       ) : isloading ? (
         <span className="loader"></span>
       ) : (
-        products.map((product) => {
+        productsFromUser.map((productDataFromUser) => {
           return (
             <ProductBasketItem
-              key={product.productId}
-              product={product}
-              onGetPrice={(price, quantity) => {
+              key={productDataFromUser.productId}
+              productDataFromUser={productDataFromUser}
+              getPrice={(price, quantity) => {
                 if (price !== undefined) {
                   onSetPrice(price, quantity);
                 }
+              }}
+              getUpdatedProductFormUser={() => {
+                console.log("Update Product Data after delete");
+                setTest((prevt) => (prevt += 1));
               }}
             />
           );
         })
       )}
-      {console.log(user.promotion)}
-      {user.promotion ? <p>Original Price: {price.toFixed(2)} €</p> : ""}
-      {user.promotion ? <p>Promotion Rabatt 10%: {((price / 100) * 10).toFixed(2)} €</p> : ""}
-      {user.promotion ? (
-        <p>Your Price with 10% Rabatt: {(price - (price / 100) * 10).toFixed(2)} €</p>
-      ) : (
-        ""
-      )}
-      {user.promotion ? (
-        <p>
-          <b>Warenkorb Gesamtpreis: {(price - (price / 100) * 10).toFixed(2)} €</b>
-        </p>
-      ) : (
-        <p>
-          <b>Warenkorb Gesamtpreis: {price} €</b>
-        </p>
-      )}
+      {user && productsFromUser.length !== 0 ? (
+        user.promotion ? (
+          <p>Original Price: {price.toFixed(2)} €</p>
+        ) : (
+          ""
+        )
+      ) : undefined}
+      {user && productsFromUser.length !== 0 ? (
+        user.promotion ? (
+          <p>Promotion Rabatt 10%: {((price / 100) * 10).toFixed(2)} €</p>
+        ) : (
+          ""
+        )
+      ) : undefined}
+      {user && productsFromUser.length !== 0 ? (
+        user.promotion ? (
+          <p>Your Price with 10% Rabatt: {(price - (price / 100) * 10).toFixed(2)} €</p>
+        ) : (
+          ""
+        )
+      ) : undefined}
+      {user && productsFromUser.length !== 0 ? (
+        user.promotion ? (
+          <p>
+            <b>Warenkorb Gesamtpreis: {(price - (price / 100) * 10).toFixed(2)} €</b>
+          </p>
+        ) : (
+          <p>
+            <b>Warenkorb Gesamtpreis: {price} €</b>
+          </p>
+        )
+      ) : undefined}
     </>
   );
 }

@@ -47,7 +47,7 @@ export function RootLayout() {
       </nav>
       <Outlet context={{ tofu: "test" }} />
       <footer>
-        <p>&copy; 2024 - tac soft</p>
+        <p>&copy; 2024 - tak soft</p>
       </footer>
     </>
   );

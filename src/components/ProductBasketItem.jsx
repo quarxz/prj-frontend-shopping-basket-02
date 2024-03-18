@@ -5,40 +5,43 @@ import { UserContext } from "../context/UserContext";
 
 import axios from "axios";
 
-export function ProductBasketItem({ product, onGetPrice }) {
+export function ProductBasketItem({ productDataFromUser, getPrice, getUpdatedProductFormUser }) {
   const location = useLocation();
 
   const { url, user } = useContext(UserContext);
   const [isloading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [products, setProducts] = useState([]);
+  const [productData, setProductData] = useState([]);
 
-  const [quantity, setQuantity] = useState(1);
+  const [quantityToDelete, setQuantityToDelete] = useState(1);
 
-  const [serverInfo, setServerInfo] = useState("");
+  const [updatedQuantity, setUpdatedQuantity] = useState(() => {
+    const newQuantity = localStorage.getItem("quantity");
+    if (newQuantity) {
+      return JSON.parse(newQuantity);
+    } else {
+      return 0;
+    }
+  });
 
-  async function setServerInfoFn(data) {
-    setServerInfo((prevServerInfo) => (prevServerInfo = data));
-    setTimeout(() => {
-      setServerInfo("");
-    }, 5000);
-  }
+  const [test, setTest] = useState(0);
 
   async function handleDeleteBasketItem(e) {
     console.log("delete");
-    console.log(product);
-    console.log(products);
+    console.log(productDataFromUser);
+    console.log(productData);
     console.log(user.id);
 
-    // const productId = e.target.value;
+    setTest((prevt) => (prevt += 1));
+
     try {
       setIsLoading(true);
-      console.log(quantity);
-      const { data } = await axios.post(
+      console.log("Hallo aus Delete Basket Item");
+      const response = await axios.post(
         `${url}/user/${user.id}/delete`,
         {
           productId: e.target.value,
-          quantity: Number(quantity),
+          quantity: Number(quantityToDelete),
         },
         {
           headers: {
@@ -46,33 +49,46 @@ export function ProductBasketItem({ product, onGetPrice }) {
           },
         }
       );
-      console.log(data);
-      console.log(data.status);
-      console.log(data.data.message);
+      console.log(response.data);
+      console.log(response.status);
 
-      setServerInfoFn(data.message);
+      console.log(productData.id);
+      console.log(response.data.products);
+
+      response.data.products.map((product) => {
+        if (product.productId === productData.id) {
+          console.log(product.quantity);
+          // localStorage.setItem("quantity", JSON.stringify(product.quantity));
+        }
+      });
+
+      console.log(response.message);
     } catch (err) {
       setIsError(true);
       console.log(err);
-      console.log(err.response.data.message);
     } finally {
       setIsLoading(false);
     }
   }
 
   useEffect(() => {
-    async function loadProducts() {
-      console.log("Load Data");
-
+    async function loadProduct() {
+      console.log("Load Product Data in Basket Item");
       try {
         setIsLoading(true);
         if (url) {
-          const response = await axios.get(`${url}/product/${product.productId}`);
+          const response = await axios.get(`${url}/product/${productDataFromUser.productId}`);
           console.log(response.data);
-          // console.log(response.status);
-          setProducts(response.data);
+          console.log(response.status);
+          setProductData(response.data);
+
+          // console.log("Hallo aus Load Product");
+          // const res02 = await axios.post(`${url}/user/${user.id}`);
+          // console.log(res02.data.products);
+          // setUpdatedQuantity(res02.data.products);
+          // console.log(updatedQuantity);
         } else {
-          setProducts([]);
+          setProductData([]);
         }
       } catch (err) {
         setIsError(true);
@@ -81,8 +97,8 @@ export function ProductBasketItem({ product, onGetPrice }) {
         setIsLoading(false);
       }
     }
-    loadProducts();
-  }, []);
+    loadProduct();
+  }, [test]);
 
   if (isError) {
     return (
@@ -95,37 +111,52 @@ export function ProductBasketItem({ product, onGetPrice }) {
 
   return (
     <section className={styles.basketItem}>
-      <h3>{products.title}</h3>
+      <h3>{productData.title}</h3>
       <ul>
-        <li>productId: {products.id}</li>
-        <li>quantity: {product.quantity} Stück</li>
-        <li>price: {products.price} €</li>
-        <li>gesamtpreis: {products.price * product.quantity} €</li>
+        <li>productId: {productData.id}</li>
+        <li>quantity: {productDataFromUser.quantity} Stück</li>
+        {/* <li>quantity: {updatedQuantity} Stück</li> */}
+        <li>price: {productData.price} €</li>
+        <li>gesamtpreis: {productData.price * productDataFromUser.quantity} €</li>
       </ul>
-      {onGetPrice(products.price, product.quantity)}
+      {getPrice(productData.price, productDataFromUser.quantity)}
 
       <button
         type="text"
         onClick={() => {
-          quantity > 1 && setQuantity((prevQuant) => prevQuant - 1);
+          quantityToDelete > 1 && setQuantityToDelete((prevQuant) => prevQuant - 1);
         }}
       >
         -
       </button>
-      <input type="number" name="quantity" value={quantity} onChange={(e) => e.target.value} />
+      <input
+        type="number"
+        name="quantity"
+        value={quantityToDelete}
+        onChange={(e) => e.target.value}
+      />
 
       <button
         type="text"
         onClick={() => {
-          quantity < product.quantity && setQuantity((prevQuant) => prevQuant + 1);
+          quantityToDelete < productDataFromUser.quantity &&
+            setQuantityToDelete((prevQuant) => prevQuant + 1);
         }}
       >
         +
       </button>
-      <button type="text" value={products.id} onClick={handleDeleteBasketItem}>
-        {quantity != product.quantity ? `delete (${quantity})` : "delete complete"}
+      <button
+        type="text"
+        value={productData.id}
+        onClick={(e) => {
+          handleDeleteBasketItem(e);
+          getUpdatedProductFormUser();
+        }}
+      >
+        {quantityToDelete != productDataFromUser.quantity
+          ? `delete (${quantityToDelete})`
+          : "delete complete"}
       </button>
-      {serverInfo ? <p>{serverInfo}</p> : undefined}
     </section>
   );
 }
