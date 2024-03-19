@@ -1,0 +1,19 @@
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h3 {
+  line-height: 3em;
+}
+
+input {
+  margin: 2em 0;
+  padding: 1em;
+}
+
+button {
+  width: 50%;
+  margin: 0em 0;
+}

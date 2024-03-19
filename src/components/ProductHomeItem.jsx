@@ -8,7 +8,7 @@ export function ProductHomeItem({ product }) {
     // <section className={styles[product.category.toLowerCase().replace(/ & /g, "")]}>
 
     <>
-      <section key={product.id}>
+      <section key={product.id} className={styles.productitem}>
         <h2>{product.title}</h2>
         <h4>{product.category}</h4>
         <p>{product.id}</p>

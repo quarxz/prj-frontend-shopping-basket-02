@@ -74,7 +74,7 @@ export function Home() {
         <p></p>
       )}
 
-      <h3>Top Products:</h3>
+      {user ? <h3>Top Products:</h3> : ""}
 
       {isloading ? (
         <span className="loader"></span>

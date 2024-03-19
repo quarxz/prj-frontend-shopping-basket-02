@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  border: 1px solid rgba(238, 238, 238, 0.3);
 }
 
 ul {
@@ -11,4 +13,9 @@ ul {
 button {
   width: 50%;
   margin: 1em 0;
+}
+
+.server-info {
+  padding: 1em 0 2em;
+  font-size: 1.5em;
 }

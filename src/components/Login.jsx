@@ -11,13 +11,14 @@ export function Login() {
   const { tofu } = useOutletContext();
 
   return (
-    <>
-      <h2>Login</h2>
-      <h3>Context Value</h3>
+    <section className={styles.login}>
+      <h2>
+        {user ? "Welcome " + user.name.charAt(0).toUpperCase() + user.name.substring(1) : "Login"}
+      </h2>
 
       {/* <p>{tofu}</p> */}
 
-      {user ? <p>{user.email}</p> : <p>Not logged in</p>}
+      {user ? <h3>Logged in as: {user.email}</h3> : <h3>Not logged in</h3>}
 
       <form
         onSubmit={(event) => {
@@ -28,11 +29,14 @@ export function Login() {
         <input
           type="text"
           value={localUserName}
-          onChange={(event) => setLocalUserName(event.target.value)}
+          // onChange={(event) => setLocalUserName(event.target.value)}
           // onChange={(event) => setLocalUserName("falk@test.com")}
+          // onChange={(event) => setLocalUserName("sonja@test.com")}
+          onChange={(event) => setLocalUserName("oleksii@test.com")}
         />
-        <button>Submit</button>
+
+        {user ? "" : <button>Login</button>}
       </form>
-    </>
+    </section>
   );
 }

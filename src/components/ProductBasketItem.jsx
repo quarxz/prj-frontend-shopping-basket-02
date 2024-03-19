@@ -5,40 +5,25 @@ import { UserContext } from "../context/UserContext";
 
 import axios from "axios";
 
-export function ProductBasketItem({ product, onGetPrice }) {
-  const location = useLocation();
-
+export function ProductBasketItem({ product, onUpdateItem }) {
   const { url, user } = useContext(UserContext);
   const [isloading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [products, setProducts] = useState([]);
 
-  const [quantity, setQuantity] = useState(1);
-
-  const [serverInfo, setServerInfo] = useState("");
-
-  async function setServerInfoFn(data) {
-    setServerInfo((prevServerInfo) => (prevServerInfo = data));
-    setTimeout(() => {
-      setServerInfo("");
-    }, 5000);
-  }
+  const [quantityToDelete, setQuantityToDelete] = useState(1);
 
   async function handleDeleteBasketItem(e) {
     console.log("delete");
     console.log(product);
-    console.log(products);
     console.log(user.id);
-
-    // const productId = e.target.value;
     try {
       setIsLoading(true);
-      console.log(quantity);
-      const { data } = await axios.post(
+      console.log("Hallo aus Delete Basket Item");
+      await axios.post(
         `${url}/user/${user.id}/delete`,
         {
-          productId: e.target.value,
-          quantity: Number(quantity),
+          productId: product._id,
+          quantity: Number(quantityToDelete),
         },
         {
           headers: {
@@ -46,43 +31,14 @@ export function ProductBasketItem({ product, onGetPrice }) {
           },
         }
       );
-      console.log(data);
-      console.log(data.status);
-      console.log(data.data.message);
-
-      setServerInfoFn(data.message);
+      onUpdateItem();
     } catch (err) {
       setIsError(true);
       console.log(err);
-      console.log(err.response.data.message);
     } finally {
       setIsLoading(false);
     }
   }
-
-  useEffect(() => {
-    async function loadProducts() {
-      console.log("Load Data");
-
-      try {
-        setIsLoading(true);
-        if (url) {
-          const response = await axios.get(`${url}/product/${product.productId}`);
-          console.log(response.data);
-          // console.log(response.status);
-          setProducts(response.data);
-        } else {
-          setProducts([]);
-        }
-      } catch (err) {
-        setIsError(true);
-        console.log(err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadProducts();
-  }, []);
 
   if (isError) {
     return (
@@ -95,37 +51,52 @@ export function ProductBasketItem({ product, onGetPrice }) {
 
   return (
     <section className={styles.basketItem}>
-      <h3>{products.title}</h3>
+      <h3>{product.title}</h3>
       <ul>
-        <li>productId: {products.id}</li>
+        <li>productId: {product._id}</li>
         <li>quantity: {product.quantity} Stück</li>
-        <li>price: {products.price} €</li>
-        <li>gesamtpreis: {products.price * product.quantity} €</li>
+        <li>price: {product.price} €</li>
+        <li>gesamtpreis: {product.price * product.quantity} €</li>
       </ul>
-      {onGetPrice(products.price, product.quantity)}
 
+      <div>
+        <button
+          type="text"
+          onClick={() => {
+            quantityToDelete > 1 && setQuantityToDelete((prevQuant) => prevQuant - 1);
+          }}
+        >
+          -
+        </button>
+        <input
+          type="text"
+          name="quantity"
+          value={quantityToDelete}
+          onChange={(e) => e.target.value}
+        />
+
+        <button
+          type="text"
+          onClick={() => {
+            quantityToDelete < product.quantity &&
+              setQuantityToDelete((prevQuant) => prevQuant + 1);
+          }}
+        >
+          +
+        </button>
+      </div>
       <button
         type="text"
-        onClick={() => {
-          quantity > 1 && setQuantity((prevQuant) => prevQuant - 1);
+        value={product.id}
+        onClick={(e) => {
+          handleDeleteBasketItem(e);
+          onUpdateItem();
         }}
+        className={styles.deleteButton}
       >
-        -
+        {quantityToDelete != product.quantity ? `delete (${quantityToDelete})` : "delete complete"}
       </button>
-      <input type="number" name="quantity" value={quantity} onChange={(e) => e.target.value} />
-
-      <button
-        type="text"
-        onClick={() => {
-          quantity < product.quantity && setQuantity((prevQuant) => prevQuant + 1);
-        }}
-      >
-        +
-      </button>
-      <button type="text" value={products.id} onClick={handleDeleteBasketItem}>
-        {quantity != product.quantity ? `delete (${quantity})` : "delete complete"}
-      </button>
-      {serverInfo ? <p>{serverInfo}</p> : undefined}
+      {/* {JSON.stringify(product)} */}
     </section>
   );
 }
