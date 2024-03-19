@@ -1,6 +1,6 @@
 import styles from "./ProductBasketItem.module.css";
 import { useContext, useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+
 import { UserContext } from "../context/UserContext";
 
 import axios from "axios";
