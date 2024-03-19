@@ -29,10 +29,10 @@ export function Login() {
         <input
           type="text"
           value={localUserName}
-          // onChange={(event) => setLocalUserName(event.target.value)}
+          onChange={(event) => setLocalUserName(event.target.value)}
           // onChange={(event) => setLocalUserName("falk@test.com")}
           // onChange={(event) => setLocalUserName("sonja@test.com")}
-          onChange={(event) => setLocalUserName("oleksii@test.com")}
+          // onChange={(event) => setLocalUserName("oleksii@test.com")}
         />
 
         {user ? "" : <button>Login</button>}
