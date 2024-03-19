@@ -1,6 +1,6 @@
 import styles from "./ProductDetailsItem.module.css";
 import { useContext, useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { json, useLocation } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
 import axios from "axios";
@@ -45,9 +45,10 @@ export function ProductDetailItem({ product }) {
   return (
     <section className={styles.detailItem}>
       <h2>{product.title}</h2>
-      {/* <h4>{product.category.name}</h4> */}
-      <p>{product.id}</p>
-      <p>{product.price} €</p>
+      <h4 className={styles.categoryText}>Category: {product.category?.name}</h4>
+      <p>Product Id: {product.id}</p>
+      <p>Price: {product.price} €</p>
+      <p>Stock: {product.stock}</p>
       <p>{product.description}</p>
 
       <button

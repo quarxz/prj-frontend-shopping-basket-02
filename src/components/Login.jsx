@@ -26,11 +26,18 @@ export function Login() {
           login(localUserName);
         }}
       >
+        <select onChange={(val) => setLocalUserName(val.target.value)}>
+          <option value="">-</option>
+          <option value="falk@test.com">Falk</option>
+          <option value="sonja@test.com">Sonja</option>
+          <option value="oleksii@test.com">Oleksii</option>
+        </select>
+
         <input
           type="text"
           value={localUserName}
-          onChange={(event) => setLocalUserName(event.target.value)}
-          // onChange={(event) => setLocalUserName("falk@test.com")}
+          // onChange={(event) => setLocalUserName(event.target.value)}
+          onChange={(event) => setLocalUserName("falk@test.com")}
           // onChange={(event) => setLocalUserName("sonja@test.com")}
           // onChange={(event) => setLocalUserName("oleksii@test.com")}
         />

@@ -14,6 +14,8 @@ export function ProductHomeItem({ product }) {
         <p>{product.id}</p>
         <p>{product.description}</p>
         <Link to={"/products/" + product.id}>Details</Link>
+
+        {product.top ? <p className={styles["top-product"]}>Top</p> : ""}
       </section>
     </>
   );
