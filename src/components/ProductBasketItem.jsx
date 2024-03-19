@@ -52,6 +52,7 @@ export function ProductBasketItem({ product, onUpdateItem }) {
   return (
     <section className={styles.basketItem}>
       <h3>{product.title}</h3>
+
       <ul>
         <li>productId: {product._id}</li>
         <li>quantity: {product.quantity} Stück</li>

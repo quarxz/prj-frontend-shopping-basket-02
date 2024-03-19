@@ -13,7 +13,20 @@ input {
   padding: 1em;
 }
 
+select {
+  width: 100%;
+  margin: 0em 0;
+  padding: 1em;
+}
+
 button {
   width: 50%;
   margin: 0em 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2em;
 }
