@@ -22,7 +22,7 @@ export function ProductDetails() {
       console.log("Load Data");
       try {
         setIsLoading(true);
-        const response = await axios.get(`${url}/product/${id}`);
+        const response = await axios.get(`${url}/products/${id}`);
         console.log(response.data);
         console.log(response.status);
         setProduct(response.data);

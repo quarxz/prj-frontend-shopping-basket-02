@@ -20,7 +20,7 @@ export function ProductBasketItem({ product, onUpdateItem }) {
       setIsLoading(true);
       console.log("Hallo aus Delete Basket Item");
       await axios.post(
-        `${url}/user/${user.id}/delete`,
+        `${url}/users/${user.id}/delete`,
         {
           productId: product._id,
           quantity: Number(quantityToDelete),

@@ -34,7 +34,7 @@ export function Basket() {
     try {
       setIsLoading(true);
       if (url) {
-        const response = await axios.post(`${url}/user/${user.id}`);
+        const response = await axios.post(`${url}/users/${user.id}`);
 
         console.log(response.data.products);
         console.log(response.status);
@@ -129,7 +129,7 @@ export function Basket() {
           </p>
         ) : (
           <p>
-            <b>Your total price: {price} €</b>
+            <b>Your total price: {price.toFixed(2)} €</b>
           </p>
         )
       ) : undefined}
