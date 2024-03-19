@@ -9,7 +9,7 @@ import axios from "axios";
 export function Products() {
   const location = useLocation();
 
-  const { url } = useContext(UserContext);
+  const { user, url } = useContext(UserContext);
 
   const [isloading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -51,7 +51,15 @@ export function Products() {
   return (
     <>
       <h1>Products</h1>
-      <p>This is the products page</p>
+
+      {user ? "" : <p>This is the products page</p>}
+      {user ? (
+        user.promotion ? (
+          <h2 className={styles.disount}>10% discount on the total price</h2>
+        ) : (
+          ""
+        )
+      ) : undefined}
 
       {isloading ? <span className="loader"></span> : <ProductItem products={products} />}
     </>

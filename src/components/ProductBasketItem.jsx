@@ -55,34 +55,36 @@ export function ProductBasketItem({ product, onUpdateItem }) {
       <ul>
         <li>productId: {product._id}</li>
         <li>quantity: {product.quantity} Stück</li>
-        {/* <li>quantity: {updatedQuantity} Stück</li> */}
         <li>price: {product.price} €</li>
         <li>gesamtpreis: {product.price * product.quantity} €</li>
       </ul>
 
-      <button
-        type="text"
-        onClick={() => {
-          quantityToDelete > 1 && setQuantityToDelete((prevQuant) => prevQuant - 1);
-        }}
-      >
-        -
-      </button>
-      <input
-        type="number"
-        name="quantity"
-        value={quantityToDelete}
-        onChange={(e) => e.target.value}
-      />
+      <div>
+        <button
+          type="text"
+          onClick={() => {
+            quantityToDelete > 1 && setQuantityToDelete((prevQuant) => prevQuant - 1);
+          }}
+        >
+          -
+        </button>
+        <input
+          type="text"
+          name="quantity"
+          value={quantityToDelete}
+          onChange={(e) => e.target.value}
+        />
 
-      <button
-        type="text"
-        onClick={() => {
-          quantityToDelete < product.quantity && setQuantityToDelete((prevQuant) => prevQuant + 1);
-        }}
-      >
-        +
-      </button>
+        <button
+          type="text"
+          onClick={() => {
+            quantityToDelete < product.quantity &&
+              setQuantityToDelete((prevQuant) => prevQuant + 1);
+          }}
+        >
+          +
+        </button>
+      </div>
       <button
         type="text"
         value={product.id}
@@ -90,6 +92,7 @@ export function ProductBasketItem({ product, onUpdateItem }) {
           handleDeleteBasketItem(e);
           onUpdateItem();
         }}
+        className={styles.deleteButton}
       >
         {quantityToDelete != product.quantity ? `delete (${quantityToDelete})` : "delete complete"}
       </button>

@@ -21,7 +21,7 @@ export function ProductDetailItem({ product }) {
     console.log(Number(quantity));
     try {
       const response = await axios.post(
-        `${url}/user/${user.id}/buy`,
+        `${url}/user/${user.id}/add`,
         {
           productId: e.target.value,
           quantity: Number(quantity),
@@ -47,6 +47,7 @@ export function ProductDetailItem({ product }) {
       <h2>{product.title}</h2>
       {/* <h4>{product.category.name}</h4> */}
       <p>{product.id}</p>
+      <p>{product.price} €</p>
       <p>{product.description}</p>
 
       <button

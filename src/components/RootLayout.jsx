@@ -23,11 +23,15 @@ export function RootLayout() {
             </NavLink>
           </li>
           {user ? (
-            <li title="Contact">
-              <NavLink className={getNavClass} to="/landingpage">
-                Landingpage
-              </NavLink>
-            </li>
+            user.promotion ? (
+              ""
+            ) : (
+              <li title="Landingpage">
+                <NavLink className={getNavClass} to="/landingpage">
+                  Landingpage
+                </NavLink>
+              </li>
+            )
           ) : undefined}
 
           {user ? (

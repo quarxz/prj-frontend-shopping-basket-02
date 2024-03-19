@@ -17,7 +17,6 @@ export function Basket() {
   const [productsFromUser, setProductsFromUser] = useState([]);
   console.log(productsFromUser);
 
-  const [arrPrice, setArrPrice] = useState([]);
   const [price, setPrice] = useState(0);
 
   let arr = Array();
@@ -104,14 +103,14 @@ export function Basket() {
       {}
       {user && productsFromUser.length !== 0 ? (
         user.promotion ? (
-          <p>Original Price: {price.toFixed(2)} €</p>
+          <p>Original price: {price.toFixed(2)} €</p>
         ) : (
           ""
         )
       ) : undefined}
       {user && productsFromUser.length !== 0 ? (
         user.promotion ? (
-          <p>Promotion Rabatt 10%: {((price / 100) * 10).toFixed(2)} €</p>
+          <p>Promotion Discount 10%: {((price / 100) * 10).toFixed(2)} €</p>
         ) : (
           ""
         )
@@ -126,11 +125,11 @@ export function Basket() {
       {user && productsFromUser.length !== 0 ? (
         user.promotion ? (
           <p>
-            <b>Warenkorb Gesamtpreis: {(price - (price / 100) * 10).toFixed(2)} €</b>
+            <b>Your total price: {(price - (price / 100) * 10).toFixed(2)} €</b>
           </p>
         ) : (
           <p>
-            <b>Warenkorb Gesamtpreis: {price} €</b>
+            <b>Your total price: {price} €</b>
           </p>
         )
       ) : undefined}
