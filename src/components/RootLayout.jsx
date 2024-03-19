@@ -22,17 +22,12 @@ export function RootLayout() {
               Products
             </NavLink>
           </li>
-          {user ? (
-            user.promotion ? (
-              ""
-            ) : (
-              <li title="Landingpage">
-                <NavLink className={getNavClass} to="/landingpage">
-                  Landingpage
-                </NavLink>
-              </li>
-            )
-          ) : undefined}
+
+          <li title="Landingpage">
+            <NavLink className={getNavClass} to="/landingpage">
+              Landingpage
+            </NavLink>
+          </li>
 
           {user ? (
             <li title="Basket">
