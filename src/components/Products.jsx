@@ -15,6 +15,8 @@ export function Products() {
   const [isError, setIsError] = useState(false);
 
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState();
 
   useEffect(() => {
     async function loadProducts() {
@@ -26,6 +28,10 @@ export function Products() {
           console.log(response.data);
           console.log(response.status);
           setProducts(response.data);
+
+          const res_categories = await axios.get(`${url}/categories`);
+          console.log(res_categories.data);
+          setCategories(res_categories.data);
         } else {
           setProducts([]);
         }
@@ -52,6 +58,26 @@ export function Products() {
     <>
       <h1>Products</h1>
 
+      {categories ? (
+        <div className={styles.selectBar}>
+          <select
+            onChange={(val) => setCategory(val.target.value)}
+            className={styles["select-category"]}
+          >
+            <option value={""}>All Categories</option>
+            {categories.map((category) => {
+              return (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      ) : (
+        ""
+      )}
+
       {user ? "" : <p>This is the products page</p>}
       {user ? (
         user.promotion ? (
@@ -61,7 +87,11 @@ export function Products() {
         )
       ) : undefined}
 
-      {isloading ? <span className="loader"></span> : <ProductItem products={products} />}
+      {isloading ? (
+        <span className="loader"></span>
+      ) : (
+        <ProductItem products={products} category={category} />
+      )}
     </>
   );
 }

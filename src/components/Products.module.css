@@ -1,7 +1,9 @@
-.productitem {
-  border: 1px solid #eee;
+.selectBar {
+  display: flex;
+  justify-content: center;
+  padding: 1.3em 0;
 }
 
-.disount {
-  font-size: 1.3em;
+.select-category {
+  width: 50%;
 }

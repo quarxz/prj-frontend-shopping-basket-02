@@ -68,7 +68,7 @@ export function ProductDetailItem({ product }) {
       <button
         type="text"
         onClick={() => {
-          quantity < 10 && setQuantity((prevQuant) => prevQuant + 1);
+          quantity < 10 && quantity < product.stock && setQuantity((prevQuant) => prevQuant + 1);
         }}
       >
         +
