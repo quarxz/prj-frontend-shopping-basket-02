@@ -4,6 +4,8 @@ import { Outlet, NavLink } from "react-router-dom";
 import { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
 
+import { FaBasketShopping } from "react-icons/fa6";
+
 export function RootLayout() {
   const { user, logout } = useContext(UserContext);
   const getNavClass = ({ isActive }) => (isActive ? styles["nav-active"] : undefined);
@@ -29,14 +31,6 @@ export function RootLayout() {
             </NavLink>
           </li>
 
-          {user ? (
-            <li title="Basket">
-              <NavLink className={getNavClass} to="/basket">
-                Shopping-Basket
-              </NavLink>
-            </li>
-          ) : undefined}
-
           <li title="Basket">
             {user ? (
               <NavLink className={getNavClass} to="/login" onClick={logout}>
@@ -48,6 +42,14 @@ export function RootLayout() {
               </NavLink>
             )}
           </li>
+
+          {user ? (
+            <li title="Basket">
+              <NavLink className={getNavClass} to="/basket">
+                <FaBasketShopping className={styles.iconbasket} />
+              </NavLink>
+            </li>
+          ) : undefined}
         </ul>
       </nav>
       <Outlet context={{ tofu: "test" }} />

@@ -9,7 +9,8 @@ import axios from "axios";
 export function Products() {
   const location = useLocation();
 
-  const { user, url } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const { VITE_API_URL: url } = import.meta.env;
 
   const [isloading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
