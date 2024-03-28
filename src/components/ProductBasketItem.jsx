@@ -1,5 +1,5 @@
 import styles from "./ProductBasketItem.module.css";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 
 import { UserContext } from "../context/UserContext";
 
@@ -9,8 +9,23 @@ export function ProductBasketItem({ product, onUpdateItem }) {
   const { url, user } = useContext(UserContext);
   const [isloading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [serverInfo, setServerInfo] = useState("");
 
   const [quantityToDelete, setQuantityToDelete] = useState(1);
+
+  async function setServerInfoFn(data) {
+    setServerInfo((prevServerInfo) => (prevServerInfo = data));
+    setTimeout(() => {
+      setServerInfo("");
+    }, 3000);
+  }
+
+  async function onUpdateItemInBasketItem(e) {
+    console.log(e.target.value);
+    const response = await axios.post(`${url}/users/${user.id}`);
+
+    console.log(response.data);
+  }
 
   async function handleDeleteBasketItem(e) {
     console.log("delete");
@@ -19,7 +34,7 @@ export function ProductBasketItem({ product, onUpdateItem }) {
     try {
       setIsLoading(true);
       console.log("Hallo aus Delete Basket Item");
-      await axios.post(
+      const response = await axios.post(
         `${url}/users/${user.id}/delete`,
         {
           productId: product._id,
@@ -32,6 +47,9 @@ export function ProductBasketItem({ product, onUpdateItem }) {
         }
       );
       onUpdateItem();
+      console.log(response.data.message);
+      console.log(response.data.basket_total);
+      setServerInfoFn(response.data.message);
     } catch (err) {
       setIsError(true);
       console.log(err);
@@ -57,7 +75,7 @@ export function ProductBasketItem({ product, onUpdateItem }) {
         <li>productId: {product._id}</li>
         <li>quantity: {product.quantity} Stück</li>
         <li>price: {product.price} €</li>
-        <li>gesamtpreis: {product.price * product.quantity} €</li>
+        <li>gesamtpreis: {product.product_total} €</li>
       </ul>
 
       <div>
@@ -92,11 +110,14 @@ export function ProductBasketItem({ product, onUpdateItem }) {
         onClick={(e) => {
           handleDeleteBasketItem(e);
           onUpdateItem();
+
+          onUpdateItemInBasketItem(e);
         }}
         className={styles.deleteButton}
       >
         {quantityToDelete != product.quantity ? `delete (${quantityToDelete})` : "delete complete"}
       </button>
+      {serverInfo ? <p className={styles["server-info"]}>{serverInfo}</p> : <p></p>}
       {/* {JSON.stringify(product)} */}
     </section>
   );

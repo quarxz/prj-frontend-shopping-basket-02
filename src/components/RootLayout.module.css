@@ -33,3 +33,14 @@
 .nav-active {
   color: red;
 }
+
+.iconbasket {
+  color: #aaa;
+  font-size: 1.2em;
+}
+
+.iconbasket:hover,
+.nav-active .iconbasket {
+  color: #eee;
+  font-size: 1.2em;
+}

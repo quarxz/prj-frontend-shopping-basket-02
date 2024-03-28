@@ -10,9 +10,9 @@ import axios from "axios";
 export function Home() {
   const location = useLocation();
 
-  const { user, url } = useContext(UserContext);
-  console.log(user);
-  console.log(url);
+  const { user } = useContext(UserContext);
+  const { VITE_API_URL: url } = import.meta.env;
+
   const [localUserName, setLocalUserName] = useState("");
 
   const [isloading, setIsLoading] = useState(false);

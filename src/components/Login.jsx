@@ -2,13 +2,18 @@ import styles from "./Login.module.css";
 
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useNavigate } from "react-router-dom";
 
 export function Login() {
-  const { user, login, logout } = useContext(UserContext);
+  const navigate = useNavigate();
+  const { user, login } = useContext(UserContext);
 
   const [localUserName, setLocalUserName] = useState("");
   const { tofu } = useOutletContext();
+
+  useEffect(() => {
+    user && navigate("/");
+  }, [user, user?.id]);
 
   return (
     <section className={styles.login}>

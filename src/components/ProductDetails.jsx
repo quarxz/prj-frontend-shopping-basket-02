@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useCallback } from "react";
 import { UserContext } from "../context/UserContext";
 
 import { ProductDetailItem } from "./ProductDetailItem";
@@ -17,24 +17,26 @@ export function ProductDetails() {
 
   const [product, setProduct] = useState([]);
 
-  useEffect(() => {
-    async function loadProducts() {
-      console.log("Load Data");
-      try {
-        setIsLoading(true);
-        const response = await axios.get(`${url}/products/${id}`);
-        console.log(response.data);
-        console.log(response.status);
-        setProduct(response.data);
-      } catch (err) {
-        setIsError(true);
-        console.log(err);
-      } finally {
-        setIsLoading(false);
-      }
+  const loadProducts = useCallback(async () => {
+    // async function loadProducts() {
+    console.log("Load Data");
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`${url}/products/${id}`);
+      console.log(response.data);
+      console.log(response.status);
+      setProduct(response.data);
+    } catch (err) {
+      setIsError(true);
+      console.log(err);
+    } finally {
+      setIsLoading(false);
     }
+  }, [url, user.id]);
+
+  useEffect(() => {
     loadProducts();
-  }, [location]);
+  }, [loadProducts]);
 
   if (isError) {
     return (
@@ -50,7 +52,16 @@ export function ProductDetails() {
       <h1>Product Details</h1>
       <p>This is the product detail page for id: {id}</p>
 
-      {isloading ? <span className="loader"></span> : <ProductDetailItem product={product} />}
+      {isloading ? (
+        <span className="loader"></span>
+      ) : (
+        <ProductDetailItem
+          product={product}
+          onUpdateItem={() => {
+            loadProducts();
+          }}
+        />
+      )}
       <NavLink onClick={() => navigate(-1)}>Back</NavLink>
     </>
   );

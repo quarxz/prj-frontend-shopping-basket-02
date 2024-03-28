@@ -1,33 +1,29 @@
 import styles from "./Basket.module.css";
 import { useContext, useState, useEffect, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
 import { ProductBasketItem } from "./ProductBasketItem";
+// import { DiscountPrice } from "./DiscountPrice";
 import axios from "axios";
 
 export function Basket() {
-  const location = useLocation();
+  const navigate = useNavigate();
 
-  const { user, url } = useContext(UserContext);
-  console.log(user);
+  const { user } = useContext(UserContext);
+  const { VITE_API_URL: url } = import.meta.env;
+
   const [isloading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
   const [productsFromUser, setProductsFromUser] = useState([]);
-  console.log(productsFromUser);
 
-  const [price, setPrice] = useState(0);
+  // const [price, setPrice] = useState(0);
+  const [totalPrices, setTotalPrices] = useState([]);
 
-  let arr = Array();
-
-  async function onSetPrice() {
-    let sum = arr.reduce((acc, curr) => {
-      return acc + curr;
-    }, 0);
-    setPrice(sum);
-    console.log(price);
-  }
+  // useEffect(() => {
+  //   !user && navigate("/");
+  // }, [user, user?.id]);
 
   const loadProducts = useCallback(async () => {
     console.log("Load Data");
@@ -36,20 +32,19 @@ export function Basket() {
       if (url) {
         const response = await axios.post(`${url}/users/${user.id}`);
 
-        console.log(response.data.products);
+        console.log(response.data);
         console.log(response.status);
         const { products } = response.data;
+        console.log(products);
         setProductsFromUser(products);
-
-        response.data.products?.length && setPrice(0);
-
-        response.data.products.map((product) => {
-          const price = product.product.price;
-          const quantity = product.quantity;
-          const productgesamtpreis = price * quantity;
-          arr.push(productgesamtpreis);
+        // setPrice(response.data.basket_total);
+        setTotalPrices({
+          basket_total: response.data.basket_total.toFixed(2),
+          basket_total_discount: response.data.basket_total_discount.toFixed(2),
+          basket_total_promotion: response.data.basket_total_promotion.toFixed(2),
         });
-        onSetPrice();
+
+        // response.data.products?.length && setPrice(0);
 
         console.log("Hello from Load Products in Basket!");
       } else {
@@ -60,12 +55,14 @@ export function Basket() {
       // console.log(err);
     } finally {
       setIsLoading(false);
+      console.log("finally");
     }
-  }, [url, user.id]);
+  }, [url, user?.id]);
 
   useEffect(() => {
     loadProducts();
-  }, [loadProducts]);
+    !user && navigate("/");
+  }, [loadProducts, user, user?.id]);
 
   return (
     <>
@@ -76,12 +73,16 @@ export function Basket() {
         <span className="loader"></span>
       ) : (
         productsFromUser.map((productDataFromUser) => {
+          {
+            console.log(productDataFromUser);
+          }
           return (
             <ProductBasketItem
               key={productDataFromUser.product._id}
               product={{
                 ...productDataFromUser.product,
                 quantity: productDataFromUser.quantity,
+                product_total: productDataFromUser.product_total,
               }}
               // getPrice={(price, quantity) => {
               //   if (price !== undefined) {
@@ -101,38 +102,22 @@ export function Basket() {
         })
       )}
       {}
-      {user && productsFromUser.length !== 0 ? (
-        user.promotion ? (
-          <p>Original price: {price.toFixed(2)} €</p>
-        ) : (
-          ""
-        )
+      {user?.promotion ? <p>Original price: {totalPrices.basket_total} €</p> : undefined}
+      {user?.promotion ? (
+        <p>Promotion Discount 10%: {totalPrices.basket_total_discount} €</p>
       ) : undefined}
-      {user && productsFromUser.length !== 0 ? (
-        user.promotion ? (
-          <p>Promotion Discount 10%: {((price / 100) * 10).toFixed(2)} €</p>
-        ) : (
-          ""
-        )
+      {user?.promotion ? (
+        <p>Your Price with 10% Rabatt: {totalPrices.basket_total_promotion} €</p>
       ) : undefined}
-      {user && productsFromUser.length !== 0 ? (
-        user.promotion ? (
-          <p>Your Price with 10% Rabatt: {(price - (price / 100) * 10).toFixed(2)} €</p>
-        ) : (
-          ""
-        )
-      ) : undefined}
-      {user && productsFromUser.length !== 0 ? (
-        user.promotion ? (
-          <p>
-            <b>Your total price: {(price - (price / 100) * 10).toFixed(2)} €</b>
-          </p>
-        ) : (
-          <p>
-            <b>Your total price: {price.toFixed(2)} €</b>
-          </p>
-        )
-      ) : undefined}
+      {user?.promotion ? (
+        <p>
+          <b>Your total price: {totalPrices.basket_total_promotion} €</b>
+        </p>
+      ) : (
+        <p>
+          <b>Your total price: {totalPrices.basket_total} €</b>
+        </p>
+      )}
     </>
   );
 }
