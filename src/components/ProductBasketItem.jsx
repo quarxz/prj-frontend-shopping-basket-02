@@ -1,5 +1,5 @@
 import styles from "./ProductBasketItem.module.css";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 
 import { UserContext } from "../context/UserContext";
 
@@ -18,6 +18,13 @@ export function ProductBasketItem({ product, onUpdateItem }) {
     setTimeout(() => {
       setServerInfo("");
     }, 3000);
+  }
+
+  async function onUpdateItemInBasketItem(e) {
+    console.log(e.target.value);
+    const response = await axios.post(`${url}/users/${user.id}`);
+
+    console.log(response.data);
   }
 
   async function handleDeleteBasketItem(e) {
@@ -103,6 +110,8 @@ export function ProductBasketItem({ product, onUpdateItem }) {
         onClick={(e) => {
           handleDeleteBasketItem(e);
           onUpdateItem();
+
+          onUpdateItemInBasketItem(e);
         }}
         className={styles.deleteButton}
       >

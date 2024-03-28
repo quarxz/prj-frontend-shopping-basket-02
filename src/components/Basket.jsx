@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
 import { ProductBasketItem } from "./ProductBasketItem";
-import { DiscountPrice } from "./DiscountPrice";
+// import { DiscountPrice } from "./DiscountPrice";
 import axios from "axios";
 
 export function Basket() {
@@ -21,9 +21,9 @@ export function Basket() {
   // const [price, setPrice] = useState(0);
   const [totalPrices, setTotalPrices] = useState([]);
 
-  useEffect(() => {
-    !user && navigate("/");
-  }, [user, user?.id]);
+  // useEffect(() => {
+  //   !user && navigate("/");
+  // }, [user, user?.id]);
 
   const loadProducts = useCallback(async () => {
     console.log("Load Data");
@@ -61,7 +61,8 @@ export function Basket() {
 
   useEffect(() => {
     loadProducts();
-  }, [loadProducts]);
+    !user && navigate("/");
+  }, [loadProducts, user, user?.id]);
 
   return (
     <>
